@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="輸入圖片像素尺寸與列印寬度，估算等比例高度、有效 PPI，並比較你設定的目標。">
+  <meta name="referrer" content="no-referrer">
+  <title>圖片列印尺寸試算｜Gloss Tools by GlossQuote</title>
+  <link rel="stylesheet" href="/styles/app.css">
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">跳至試算工具</a>
+  <header class="topbar">
+    <span class="brand">圖片列印尺寸試算 <span>Gloss Tools</span></span>
+    <nav aria-label="語言與首頁">
+      <button id="language" type="button" class="quiet" disabled>English</button>
+      <a href="https://glossquote.com/index.html">繁中首頁</a>
+    </nav>
+  </header>
+  <main>
+    <div class="introduction">
+      <h1>圖片列印尺寸試算</h1>
+      <p>已知圖片像素寬高嗎？輸入想要的列印寬度，查看等比例高度、有效 PPI，以及是否達到你設定的目標。</p>
+      <p class="quality-note">PPI 是尺寸試算指標，不是列印品質保證。</p>
+    </div>
+    <section id="workspace" class="workspace" aria-label="列印尺寸工作區">
+      <p id="init-status" class="notice" role="status">頁面尚未準備好，輸入欄位保持停用。重新載入後再試。</p>
+      <noscript><p class="notice">需要 JavaScript 才能在本頁試算。輸入欄位保持停用，不會送出資料。</p></noscript>
+      <form id="print-form" autocomplete="off" novalidate>
+        <fieldset id="inputs" disabled>
+          <legend>圖片與列印尺寸</legend>
+          <div class="field-grid">
+            <div class="field">
+              <label for="pixelWidthRaw">圖片像素寬</label>
+              <div class="input-line">
+                <input id="pixelWidthRaw" type="text" inputmode="numeric" maxlength="6" autocomplete="off" spellcheck="false" autocapitalize="off" aria-describedby="pixelWidthRaw-help pixelWidthRaw-error">
+                <span aria-hidden="true">px</span>
+              </div>
+              <p id="pixelWidthRaw-help" class="field-help">1–100000 px；最多 6 位 ASCII 整數。</p>
+              
+              <p id="pixelWidthRaw-error" class="field-error"></p>
+            </div>
+            <div class="field">
+              <label for="pixelHeightRaw">圖片像素高</label>
+              <div class="input-line">
+                <input id="pixelHeightRaw" type="text" inputmode="numeric" maxlength="6" autocomplete="off" spellcheck="false" autocapitalize="off" aria-describedby="pixelHeightRaw-help pixelHeightRaw-error">
+                <span aria-hidden="true">px</span>
+              </div>
+              <p id="pixelHeightRaw-help" class="field-help">1–100000 px；最多 6 位 ASCII 整數。</p>
+              
+              <p id="pixelHeightRaw-error" class="field-error"></p>
+            </div>
+            <div class="field">
+              <label for="widthMmRaw">列印寬度（毫米）</label>
+              <div class="input-line">
+                <input id="widthMmRaw" type="text" inputmode="decimal" maxlength="8" autocomplete="off" spellcheck="false" autocapitalize="off" aria-describedby="widthMmRaw-help widthMmRaw-error">
+                <span aria-hidden="true">mm</span>
+              </div>
+              <p id="widthMmRaw-help" class="field-help">0.01–10000.00 mm；最多兩位小數，例如 254.5。</p>
+              <button id="insert-decimal" type="button" class="decimal-button" disabled>插入小數點</button>
+              <p id="widthMmRaw-error" class="field-error"></p>
+            </div>
+            <div class="field">
+              <label for="targetPpiRaw">目標 PPI</label>
+              <div class="input-line">
+                <input id="targetPpiRaw" type="text" inputmode="numeric" maxlength="4" value="300" autocomplete="off" spellcheck="false" autocapitalize="off" aria-describedby="targetPpiRaw-help targetPpiRaw-error">
+                
+              </div>
+              <p id="targetPpiRaw-help" class="field-help">1–2400；可自行調整。</p>
+              
+              <p id="targetPpiRaw-error" class="field-error"></p>
+            </div>
+          </div>
+          <p class="target-note">目標 PPI 可自行調整；預設 300 只是起始參考，不是通用列印品質標準。</p>
+          <div class="actions">
+            <button id="calculate" class="primary" type="submit" disabled>試算</button>
+            <button id="clear" type="button" disabled>清除</button>
+          </div>
+        </fieldset>
+      </form>
+      <p id="error-summary" class="error-summary" role="alert" hidden></p>
+      <p id="status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div class="result-area" aria-labelledby="result-title">
+        <h2 id="result-title">試算結果</h2>
+        <div id="result" hidden>
+          <dl class="measurements">
+            <div class="print-size"><dt>依比例推算的列印尺寸</dt><dd id="result-size"></dd></div>
+            <div><dt>輸入的圖片像素尺寸</dt><dd id="result-pixels"></dd></div>
+            <div class="ppi"><dt>有效 PPI</dt><dd id="result-ppi"></dd></div>
+            <div><dt>你設定的目標</dt><dd id="result-target"></dd></div>
+          </dl>
+          <p id="target-status" class="target-status"></p>
+          <p class="precision-note">PPI 顯示至小數點後兩位；是否達標使用未四捨五入的精確值。</p>
+          <dl class="required"><div><dt>達到目標所需的最少像素尺寸</dt><dd id="result-required"></dd></div></dl>
+        </div>
+        <p id="empty-result" class="empty-result">填入像素寬高與列印寬度，再按「試算」查看結果。</p>
+      </div>
+      <p class="data-note">輸入只在目前頁面計算，不會保存或上傳。首次載入仍需下載網站檔案。</p>
+    </section>
+    <p class="limit-note">本工具不讀取或修改圖片，也不評估印表機、紙材、色彩、觀看距離或最終印刷品質。</p>
+    <section class="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title">關於尺寸與 PPI</h2>
+      <details><summary>有效 PPI 是什麼？</summary><p>它是圖片像素數除以指定列印尺寸換算出的每英吋像素數。這是圖片密度估算，不是印表機 DPI，也不保證實際視覺品質。</p></details>
+      <details><summary>列印高度怎麼算？</summary><p>工具依輸入像素寬高保持原比例，用你指定的列印寬度推算高度；不裁切也不拉伸圖片。</p></details>
+      <details><summary>300 PPI 一定適合我的印刷嗎？</summary><p>不一定。300 是可修改的預設參考值；印刷方式、紙材、觀看距離和用途都會影響選擇，請依你的工作流程設定目標。</p></details>
+      <details><summary>工具會上傳或修改圖片嗎？</summary><p>不會。這個版本只在目前頁面計算你輸入的像素尺寸、列印寬度和目標 PPI，不讀取圖片檔，也不保存輸入。</p></details>
+    </section>
+  </main>
+  <footer>Gloss Tools by GlossQuote</footer>
+  <dialog id="confirmation" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+    <h2 id="confirm-title">確認清除資料</h2>
+    <p id="confirm-message"></p>
+    <div class="dialog-actions">
+      <button id="confirm-cancel" type="button" disabled>取消</button>
+      <button id="confirm-proceed" type="button" class="primary" disabled>清除</button>
+    </div>
+  </dialog>
+</body>
+</html>

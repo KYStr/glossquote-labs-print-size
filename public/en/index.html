@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Enter image pixel dimensions and print width to estimate proportional height and effective PPI against your chosen target.">
+  <meta name="referrer" content="no-referrer">
+  <title>Image Print Size Calculator | Gloss Tools by GlossQuote</title>
+  <link rel="stylesheet" href="/styles/app.css">
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">Skip to calculator</a>
+  <header class="topbar">
+    <span class="brand">Image Print Size Calculator <span>Gloss Tools</span></span>
+    <nav aria-label="Language and home">
+      <button id="language" type="button" class="quiet" disabled>繁體中文</button>
+      <a href="https://glossquote.com/en/index.html">English home</a>
+    </nav>
+  </header>
+  <main>
+    <div class="introduction">
+      <h1>Image Print Size Calculator</h1>
+      <p>Know the image's pixel dimensions? Enter a print width to estimate its proportional height, effective PPI and whether it meets your chosen target.</p>
+      <p class="quality-note">PPI is a size calculation, not a print-quality guarantee.</p>
+    </div>
+    <section id="workspace" class="workspace" aria-label="Print size workspace">
+      <p id="init-status" class="notice" role="status">This page is not ready yet, so inputs remain disabled. Reload and try again.</p>
+      <noscript><p class="notice">JavaScript is needed to calculate in this page. Inputs remain disabled and no data is submitted.</p></noscript>
+      <form id="print-form" autocomplete="off" novalidate>
+        <fieldset id="inputs" disabled>
+          <legend>Image and print dimensions</legend>
+          <div class="field-grid">
+            <div class="field">
+              <label for="pixelWidthRaw">Image pixel width</label>
+              <div class="input-line">
+                <input id="pixelWidthRaw" type="text" inputmode="numeric" maxlength="6" autocomplete="off" spellcheck="false" autocapitalize="off" aria-describedby="pixelWidthRaw-help pixelWidthRaw-error">
+                <span aria-hidden="true">px</span>
+              </div>
+              <p id="pixelWidthRaw-help" class="field-help">1–100000 px; up to 6 ASCII digits.</p>
+              
+              <p id="pixelWidthRaw-error" class="field-error"></p>
+            </div>
+            <div class="field">
+              <label for="pixelHeightRaw">Image pixel height</label>
+              <div class="input-line">
+                <input id="pixelHeightRaw" type="text" inputmode="numeric" maxlength="6" autocomplete="off" spellcheck="false" autocapitalize="off" aria-describedby="pixelHeightRaw-help pixelHeightRaw-error">
+                <span aria-hidden="true">px</span>
+              </div>
+              <p id="pixelHeightRaw-help" class="field-help">1–100000 px; up to 6 ASCII digits.</p>
+              
+              <p id="pixelHeightRaw-error" class="field-error"></p>
+            </div>
+            <div class="field">
+              <label for="widthMmRaw">Print width (mm)</label>
+              <div class="input-line">
+                <input id="widthMmRaw" type="text" inputmode="decimal" maxlength="8" autocomplete="off" spellcheck="false" autocapitalize="off" aria-describedby="widthMmRaw-help widthMmRaw-error">
+                <span aria-hidden="true">mm</span>
+              </div>
+              <p id="widthMmRaw-help" class="field-help">0.01–10000.00 mm; up to 2 decimal places, for example 254.5.</p>
+              <button id="insert-decimal" type="button" class="decimal-button" disabled>Insert decimal point</button>
+              <p id="widthMmRaw-error" class="field-error"></p>
+            </div>
+            <div class="field">
+              <label for="targetPpiRaw">Target PPI</label>
+              <div class="input-line">
+                <input id="targetPpiRaw" type="text" inputmode="numeric" maxlength="4" value="300" autocomplete="off" spellcheck="false" autocapitalize="off" aria-describedby="targetPpiRaw-help targetPpiRaw-error">
+                
+              </div>
+              <p id="targetPpiRaw-help" class="field-help">1–2400; you can change this target.</p>
+              
+              <p id="targetPpiRaw-error" class="field-error"></p>
+            </div>
+          </div>
+          <p class="target-note">You can change the target PPI. The default of 300 is a starting reference, not a universal print-quality standard.</p>
+          <div class="actions">
+            <button id="calculate" class="primary" type="submit" disabled>Calculate</button>
+            <button id="clear" type="button" disabled>Clear</button>
+          </div>
+        </fieldset>
+      </form>
+      <p id="error-summary" class="error-summary" role="alert" hidden></p>
+      <p id="status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+      <div class="result-area" aria-labelledby="result-title">
+        <h2 id="result-title">Calculation result</h2>
+        <div id="result" hidden>
+          <dl class="measurements">
+            <div class="print-size"><dt>Proportional print size</dt><dd id="result-size"></dd></div>
+            <div><dt>Input image dimensions</dt><dd id="result-pixels"></dd></div>
+            <div class="ppi"><dt>Effective PPI</dt><dd id="result-ppi"></dd></div>
+            <div><dt>Your selected target</dt><dd id="result-target"></dd></div>
+          </dl>
+          <p id="target-status" class="target-status"></p>
+          <p class="precision-note">PPI is displayed to two decimal places; target status uses the exact, unrounded value.</p>
+          <dl class="required"><div><dt>Minimum pixel dimensions for this target</dt><dd id="result-required"></dd></div></dl>
+        </div>
+        <p id="empty-result" class="empty-result">Enter the pixel dimensions and print width, then select Calculate to see the result.</p>
+      </div>
+      <p class="data-note">Inputs are calculated in this page and are not saved or uploaded. The first page load still downloads the website files.</p>
+    </section>
+    <p class="limit-note">This calculator does not read or modify the image or assess the printer, paper, color, viewing distance or final print quality.</p>
+    <section class="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title">About print size and PPI</h2>
+      <details><summary>What is effective PPI?</summary><p>It is the image's pixel count divided by the specified print size in inches. It estimates image pixel density; it is not printer DPI and does not guarantee visual quality.</p></details>
+      <details><summary>How is print height calculated?</summary><p>The calculator keeps the input pixel aspect ratio and derives the height from your requested print width. It does not crop or stretch the image.</p></details>
+      <details><summary>Is 300 PPI right for every print?</summary><p>No. It is an editable starting reference. Print method, paper, viewing distance and intended use all affect the target you may choose.</p></details>
+      <details><summary>Does the calculator upload or modify my image?</summary><p>No. This version calculates only the pixel dimensions, print width and target PPI you enter in the current page. It does not read an image file or save your inputs.</p></details>
+    </section>
+  </main>
+  <footer>Gloss Tools by GlossQuote</footer>
+  <dialog id="confirmation" aria-labelledby="confirm-title" aria-describedby="confirm-message">
+    <h2 id="confirm-title">Confirm clearing data</h2>
+    <p id="confirm-message"></p>
+    <div class="dialog-actions">
+      <button id="confirm-cancel" type="button" disabled>Cancel</button>
+      <button id="confirm-proceed" type="button" class="primary" disabled>Clear</button>
+    </div>
+  </dialog>
+</body>
+</html>
